@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import './App.css';
+import Post from './Post/Post';
 
 import Header from './Header/Header';
 import Compose from './Compose/Compose';
+
+
+
+const Base_URL = "https://practiceapi.devmountain.com/api"
 
 class App extends Component {
   constructor() {
@@ -19,23 +24,40 @@ class App extends Component {
   }
   
   componentDidMount() {
-
+    axios.get(`${Base_URL}/posts`).then(res => {
+      this.setState({posts: res.data})
+    })
   }
 
-  updatePost() {
-  
+  updatePost(id,text) {
+    axios.put(`${Base_URL}/posts?id=${id}`,{text}).then(res => {
+      console.log('res:',res)
+      this.setState({posts: res.data})
+    })
   }
 
-  deletePost() {
-
+  deletePost(id) {
+    axios.delete(`${Base_URL}/posts?id=${id}`).then(res => {
+      this.setState({posts: res.data})
+    })
   }
 
-  createPost() {
+  createPost(text) {
+    axios.post(`${Base_URL}/posts`, {text}).then(res => {
+      this.setState({posts: res.data})
+    })
+  }
 
+  searchPosts = (input) => {
+    let foundPost = this.state.posts.filter((obj) => {
+      return obj.text.includes(input)
+    })
+    this.setState({posts: foundPost})
   }
 
   render() {
     const { posts } = this.state;
+    console.log(posts)
 
     return (
       <div className="App__parent">
@@ -43,8 +65,19 @@ class App extends Component {
 
         <section className="App__content">
 
-          <Compose />
+          <Compose createPostFN={this.createPost} searchPosts={this.searchPosts}/>
           
+          {posts.map(post=>(
+            <Post 
+              key-={post.id} 
+              text={post.text} 
+              date={post.date}
+              updatePostFN={this.updatePost}
+              id={post.id}
+              deletePostFN={this.deletePost}
+            />
+          ))}
+
         </section>
       </div>
     );

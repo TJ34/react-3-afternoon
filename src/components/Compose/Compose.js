@@ -21,9 +21,21 @@ export default class Compose extends Component {
   }
 
   createPost() {
+    const {text} = this.state;
+    const {createPostFN} = this.props;
 
+    createPostFN(text);
+    this.setState({text: ''})
   }
 
+    searchingPosts = () => {
+      const {text} = this.state;
+      const {searchPosts} = this.props;
+
+      searchPosts(text);
+      this.setState({text: ''})
+    }
+  
   render() {
     // Destructuring
     const { text } = this.state;
@@ -46,6 +58,7 @@ export default class Compose extends Component {
 
         <div className="Compose__bottom">
           <button onClick={ this.createPost }>Compose</button>
+          <button onClick={ this.searchingPosts }>Search</button>
         </div>
       </section>
     )
