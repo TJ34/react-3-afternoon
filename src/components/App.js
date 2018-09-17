@@ -61,11 +61,11 @@ class App extends Component {
 
     return (
       <div className="App__parent">
-        <Header />
+        <Header searchPosts={this.searchPosts} mount={this.componentDidMount}/>
 
         <section className="App__content">
 
-          <Compose createPostFN={this.createPost} searchPosts={this.searchPosts}/>
+          <Compose createPostFN={this.createPost} />
           
           {posts.map(post=>(
             <Post 
